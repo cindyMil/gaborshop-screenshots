@@ -23,7 +23,7 @@ async function takeScreenshots() {
     console.log('📸 Capture desktop...');
     const pageDesktop = await browser.newPage();
     await pageDesktop.setViewport({ width: 1920, height: 1080 });
-    await pageDesktop.goto('https://gaborshop.fr', { 
+    await pageDesktop.goto('https://www.gabor-shop.fr', { 
       waitUntil: 'networkidle2',
       timeout: 60000 
     });
@@ -40,7 +40,7 @@ async function takeScreenshots() {
     const pageMobile = await browser.newPage();
     await pageMobile.setViewport({ width: 375, height: 812 });
     await pageMobile.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15');
-    await pageMobile.goto('https://gaborshop.fr', { 
+    await pageMobile.goto('https://www.gabor-shop.fr', { 
       waitUntil: 'networkidle2',
       timeout: 60000 
     });
