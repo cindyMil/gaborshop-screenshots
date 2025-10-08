@@ -1,0 +1,40 @@
+name: 📸 Screenshots Hebdomadaires Gaborshop
+
+on:
+  schedule:
+    # Tous les mercredis à 10h00 UTC (= 11h heure française en hiver)
+    - cron: '0 10 * * 3'
+  workflow_dispatch: # Permet de lancer manuellement
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: 📦 Install dependencies
+        run: npm install
+      
+      - name: 📸 Take screenshots
+        run: npm run screenshot
+      
+      - name: 📤 Upload screenshots as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gaborshop-screenshots-${{ github.run_number }}
+          path: screenshots/
+          retention-days: 90
+      
+      - name: 💾 Commit screenshots to repository
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add screenshots/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "📸 Screenshots du $(date +'%Y-%m-%d à %H:%M')" && git push)
