@@ -24,15 +24,16 @@ jobs:
       - name: 📸 Take screenshots
         run: npm run screenshot
       
-      - name: 📤 Upload to Google Drive
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-        run: npm run upload
-      
-      - name: 📋 Upload as artifact (backup)
+      - name: 📤 Upload screenshots as artifact
         uses: actions/upload-artifact@v4
         with:
           name: gaborshop-screenshots-${{ github.run_number }}
           path: screenshots/
-          retention-days: 30
+          retention-days: 90
+      
+      - name: 💾 Commit screenshots to repository
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add screenshots/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "📸 Screenshots du $(date +'%Y-%m-%d à %H:%M')" && git push)
